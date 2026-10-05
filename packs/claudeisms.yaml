@@ -1,0 +1,138 @@
+# Claude-leaning tells. GPT-flavored register lives in gpt-register.yaml;
+# chat-transcript markers in chatbot-voice.yaml. Shared structural tells
+# (bold lead-in bullets, tricolon, uniform bullets) stay here.
+#
+# Calibration note: every rule below fires constantly in genuine writing —
+# that is the point of the co-occurrence discount and the author baseline.
+# Any single rule is noise.
+pack: claudeisms
+version: 9
+half_life_days: 120
+updated: 2026-10-04
+scope: [prose, longform]
+rules:
+  # -- punctuation ------------------------------------------------------
+  - id: em_dash_rate
+    type: rate
+    pattern: '—|(?<!-)--(?!-)'   # double hyphen as dash, but not ---/table rules
+    unit: per_1k_words
+    baseline: {human_p50: 1.2, human_p95: 6.0}
+    weight: 0.8
+
+  - id: em_dash_aside
+    type: regex
+    pattern: '— [^—\n]{4,60} —'
+    note: 'paired em-dashes for a mid-sentence aside — like this one — rather than a break'
+    weight: 1.0
+
+  - id: arrows_in_prose
+    type: regex
+    pattern: '→'
+    note: 'arrow glyphs in running prose'
+    weight: 0.9
+
+  - id: backtick_emphasis
+    type: regex
+    pattern: '`[a-zA-Z][a-zA-Z -]{1,24}`'
+    note: 'backticks as emphasis; false-fires on real inline code, hence the low weight'
+    weight: 0.4
+
+  # -- constructions ----------------------------------------------------
+  - id: antithesis_family
+    type: regex
+    pattern: '(?i)\bnot (?:just |only |merely )?[\w''-]+(?: [\w''-]+){0,3}[,.;]?\s*(?:—|--)?\s*(?:but|it''s|it is)\b|\b(?:isn''t|aren''t|wasn''t|weren''t) [\w'' -]{2,30}\.\s+(?:It''s|That''s|They''re|It is)\b|\bnot [\w'' -]{2,20}, not [\w'' -]{2,20}, but\b'
+    note: 'the antithesis family: not just X but Y / X isn''t A. It''s B. / not X, not Y, but Z'
+    weight: 1.1
+
+  - id: colon_reveal
+    type: regex
+    pattern: '(?i)\b(?:here''s (?:the thing|what''s interesting|what|why|where it gets)|and here''s where it gets|the real question is)\b'
+    weight: 1.0
+
+  - id: work_doing_metaphors
+    type: regex
+    pattern: '(?i)\b(?:is|are|was|were) doing (?:a lot of(?: the)?|the) (?:work|heavy lifting)\b|\b(?:carrying|holding up) (?:that|the|this) (?:sentence|paragraph|argument|claim)\b'
+    note: 'the meta-move of pointing at which word is doing the work'
+    weight: 1.3
+
+  - id: quietly_doing_y
+    type: regex
+    pattern: '(?i)\b(?:has|have|had) been (?:quietly|silently) \w+ing\b|\b(?:quietly|silently) (?:became|built|shipped|picked|assumed|dropped|changed|replaced)\b'
+    note: 'quietly and its peer silently: the adverb that makes an ordinary verb sound like an insight'
+    weight: 1.4
+
+  - id: honest_take
+    type: regex
+    pattern: '(?i)\b(?:i''d argue|i''ll be honest|let me be direct|here''s my honest (?:take|read|answer)|the honest answer is|the short answer is|i''d push back on)\b'
+    note: 'announcing directness instead of being direct'
+    weight: 1.4
+
+  - id: self_aware_emphasis
+    type: regex
+    pattern: '(?i)\b(?:and )?that''s not nothing\b|\bwhich is (?:exactly why|the (?:whole )?point)\b'
+    weight: 1.3
+
+  # -- vocabulary -------------------------------------------------------
+  - id: metaphor_vocabulary
+    type: lexicon
+    terms: [shape, spine, substrate, bedrock, load-bearing, surface, texture, grain, fabric,
+            scaffolding, architecture, plumbing, wiring, seam, hinge, lever,
+            ballast, keel, throughline, arc, gravity, orbit, terrain, contour,
+            lens, frame, footprint, surface area, blast radius, sharp edges,
+            rough edges, guardrails, north star, the crux, the nub, aperture,
+            register, cadence, tapestry]
+    note: 'physical/structural nouns doing conceptual work; literal uses are innocent'
+    context_required: true      # bare match is noise; S5 must judge literal vs metaphorical
+    weight: 0.9
+
+  - id: surface_as_verb
+    type: regex
+    pattern: '(?i)\bsurfac(?:e|es|ed|ing) (?:the|a|an|that|this|these|those|it|them)\b'
+    note: 'unlike the noun, verb-form "surface" is almost always the metaphor'
+    weight: 1.2
+
+  - id: sincerity_hedges
+    type: lexicon
+    terms: [genuinely, honestly, straightforward, thoughtful, intentional,
+            deliberate, meaningful, worth noting, worth naming, worth flagging,
+            "it's important to note", that said, to be clear, to be fair]
+    note: 'signaling sincerity instead of demonstrating it'
+    weight: 0.7
+
+  - id: reformulation
+    type: lexicon
+    terms: [which is to say, put differently, said another way, at its core,
+            at the end of the day, ultimately, "let's unpack",
+            "let's break this down", think of it like, "imagine you're"]
+    weight: 0.6
+
+  # -- structural (shared Claude/GPT) -----------------------------------
+  - id: bold_leadin_bullets
+    type: structural
+    detect: bullet_starts_with_bold_phrase_then_colon_or_dash
+    threshold: 0.6
+    weight: 1.0
+
+  - id: rule_of_three
+    type: structural
+    detect: tricolon_density
+    note: 'three parallel items where two would do'
+    weight: 0.5
+
+  - id: anaphora_triple
+    type: structural
+    detect: anaphora_triple
+    note: 'It didn''t refuse. It didn''t hedge. It didn''t throw.'
+    weight: 1.2
+
+  - id: fragment_punch
+    type: structural
+    detect: fragment_punch
+    note: 'full sentence, then a two-word fragment for punch. Every time.'
+    weight: 0.6
+
+  - id: uniform_bullet_length
+    type: structural
+    detect: uniform_bullet_length
+    note: 'near-identical bullet lengths and syntax; humans straggle'
+    weight: 0.8

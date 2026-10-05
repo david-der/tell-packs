@@ -1,0 +1,39 @@
+pack: seo-slop
+version: 3
+half_life_days: 180
+updated: 2026-09-02
+scope: [prose, longform, blog]
+rules:
+  - id: ultimate_guide
+    type: regex
+    pattern: '(?i)\b(?:ultimate|comprehensive|complete|definitive|essential) guide\b'
+    weight: 1.0
+
+  - id: game_changer
+    type: lexicon
+    terms: [game-changer, game changer, revolutionize, revolutionary,
+            cutting-edge, state-of-the-art, next-level, "in today's fast-paced world",
+            "in today's digital age", supercharge, unlock the power]
+    weight: 1.2
+
+  - id: listicle_promises
+    type: regex
+    pattern: '(?i)\b(?:top|best) \d{1,2} (?:ways|tips|tricks|reasons|tools)\b'
+    weight: 0.9
+
+  - id: cta_boilerplate
+    type: regex
+    pattern: '(?i)\b(?:without further ado|let''s dive in|let''s get started|read on to)\b'
+    weight: 1.1
+
+  - id: faq_scaffold
+    type: regex
+    pattern: '(?im)^#{2,4}\s*(?:\p{Emoji}\s*)*(?:frequently asked questions|faqs?\b|key takeaways\b|final thoughts\b|tl;?dr\b)'
+    note: 'the standard generated-article skeleton nobody asked for'
+    weight: 0.8
+
+  - id: heading_density
+    type: structural
+    detect: heading_density
+    note: 'heading count far above human rate for the length'
+    weight: 0.6

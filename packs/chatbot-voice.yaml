@@ -1,0 +1,27 @@
+# Markers of an unedited chat transcript pasted into a document. These are
+# among the highest-precision lexical tells we have: near-zero rate in
+# authored prose, near-certain in raw assistant output. Longer half-life —
+# providers tune vocabulary faster than they tune manners.
+pack: chatbot-voice
+version: 1
+half_life_days: 240
+updated: 2026-09-02
+scope: [prose, longform]
+rules:
+  - id: eager_openers
+    type: regex
+    pattern: '(?im)\b(?:great|excellent|fantastic) question\b|\byou''re absolutely right\b|^(?:Absolutely|Certainly)[!,]|\bi appreciate you (?:sharing|asking)\b'
+    note: 'assistant acknowledgment left in the text'
+    weight: 1.8
+
+  - id: assistant_closers
+    type: regex
+    pattern: '(?i)\bi hope this helps\b|\bhappy to help\b|\blet me know if you(?:''d| would) like\b|\bwould you like me to\b'
+    note: 'the offer-to-continue nobody edited out'
+    weight: 1.8
+
+  - id: soft_invitations
+    type: regex
+    pattern: '(?i)\bfeel free to\b|\bdon''t hesitate to\b'
+    note: 'humans say this too — low weight, needs company'
+    weight: 0.8

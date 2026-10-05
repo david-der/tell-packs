@@ -1,0 +1,100 @@
+# GPT-leaning tells: the latinate register upgrade, emoji formatting,
+# paragraph-head transitions, aggressive bolding. "delve" and "tapestry"
+# are so burned they're almost period markers.
+pack: gpt-register
+version: 4
+half_life_days: 120
+updated: 2026-09-02
+scope: [prose, longform]
+rules:
+  # -- vocabulary -------------------------------------------------------
+  - id: delve_family
+    type: lexicon
+    terms: [delve, delves, delving, delved, embark, embarking, embarked,
+            unravel, unraveling, foster, fostering, fostered, bolster,
+            bolstering, garner, garnered, cultivate, cultivating, harness,
+            harnessing, streamline, streamlining]
+    note: 'the classic 2023-era GPT verbs; decayed but still well above human rate'
+    weight: 0.8
+
+  - id: register_words
+    type: lexicon
+    terms: [underscore, underscores, testament, pivotal, crucial, robust,
+            seamless, leverage, elevate, meticulous, boasts, nuanced,
+            multifaceted, holistic, realm, landscape, ecosystem, myriad,
+            plethora, unlock, navigate, intricate, vibrant, bustling,
+            profound, paramount, comprehensive, invaluable, transformative,
+            resonate, illuminate, granular, actionable, compelling,
+            striking, remarkable, notably, arguably]
+    note: 'the latinate upgrade — each word fine alone, damning in density'
+    weight: 0.7
+
+  # -- constructions ----------------------------------------------------
+  - id: vibrant_tapestry
+    type: regex
+    pattern: '(?i)\b(?:rich|vibrant|diverse|complex) (?:tapestry|landscape|ecosystem|interplay)\b'
+    weight: 1.5
+
+  - id: crucial_role
+    type: regex
+    pattern: '(?i)\bplays? a (?:crucial|pivotal|vital|key) role\b'
+    weight: 1.0
+
+  - id: dual_hedge
+    type: regex
+    pattern: '(?i)\bwhile (?:there are|it (?:is|''s)|this)\b[^.!?\n]{10,80}\b(?:it (?:is|''s)|there (?:is|are))\b'
+    note: 'balanced both-sides hedging inside a single sentence'
+    weight: 0.7
+
+  - id: whether_youre
+    type: regex
+    pattern: '(?i)\bwhether you''re a?\b'
+    note: 'audience-triangulation opener'
+    weight: 1.2
+
+  - id: world_of
+    type: regex
+    pattern: '(?i)\bthe (?:world|realm|art) of \w+'
+    weight: 0.8
+
+  - id: era_openers
+    type: regex
+    pattern: '(?i)\bin an? (?:era|age) of\b|\bin the age of\b|\bever-evolving\b'
+    weight: 1.2
+
+  - id: important_to_remember
+    type: regex
+    pattern: '(?i)\bit''s important to remember\b|\bit is (?:important|worth) (?:to remember|remembering)\b'
+    weight: 1.0
+
+  - id: grand_closers
+    type: regex
+    pattern: '(?i)\bin (?:conclusion|summary|essence)\b|\b(?:as we|when we) (?:look|move) (?:ahead|forward)\b|\bthe bottom line\b|\bultimately, the key\b'
+    weight: 0.9
+
+  - id: paragraph_head_transitions
+    type: regex
+    pattern: '(?m)^(?:Furthermore|Moreover|Additionally)\b'
+    note: 'the connective at the exact position GPT favors'
+    weight: 0.9
+
+  # -- formatting -------------------------------------------------------
+  - id: emoji_in_headings
+    type: regex
+    pattern: '^#{1,6}[^\n]*\p{Emoji}'
+    note: 'near-zero human rate in professional longform'
+    weight: 1.6
+
+  - id: emoji_bullet_leads
+    type: rate
+    pattern: '^\s*[-*]\s*\p{Emoji}'
+    unit: per_list
+    baseline: {human_p50: 0.0, human_p95: 1.0}
+    weight: 1.3
+
+  - id: aggressive_bolding
+    type: rate
+    pattern: '\*\*[^*\n]+\*\*'
+    unit: per_1k_words
+    baseline: {human_p50: 2.0, human_p95: 8.0}
+    weight: 0.7
