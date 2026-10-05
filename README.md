@@ -8,8 +8,20 @@ distributions. This repo is the other part, the hand-written one. Four YAML
 files of lexical and structural tells, the phrases and habits that show up
 far more often in generated prose than in prose a person sat down and wrote.
 
-The engine stays private for now. The packs are MIT licensed because they
-are the part worth arguing about, and because anyone can read a regex.
+The engine's source stays private for now, but its design does not.
+`rebuild/` is a specification pack detailed enough for Claude Code or a
+similar assistant to rebuild the whole engine: segmenter, the signal
+contract, the stylometric and statistical signals, the pack loader with
+its scoring and decay rules, fusion, the report, the CLI, and the web UI,
+with the test suite spelled out as requirements. See the kickoff prompt at
+the end of `rebuild/README.md`.
+
+The packs alone are not the whole detector. They are the S4 lexical layer.
+The statistical layer (perplexity, Binoculars, burstiness) and the
+stylometric layer (sentence shape, paragraph uniformity, punctuation,
+diversity, transitions) are code, and `rebuild/12_SPEC_STYLOMETRIC.md`
+and `rebuild/13_SPEC_STATISTICAL.md` carry their formulas and thresholds
+verbatim.
 
 ## The packs
 
@@ -84,8 +96,23 @@ percentile. The defaults when a rule gives no `baseline`:
 | rate | 0.5 | 3.0 |
 
 A rule marked `context_required: true` is surfaced but never scored without
-a judge that can read the surrounding text. None of the shipped rules use it
-yet.
+a judge that can read the surrounding text. One shipped rule uses it:
+`metaphor_vocabulary` in `claudeisms.yaml`, because a literal spine is
+innocent and the engine does not guess.
+
+## Rebuilding the engine
+
+```
+git clone https://github.com/david-der/tell-packs my-tell && cd my-tell
+cp rebuild/CLAUDE.md .
+claude
+```
+
+Then paste the kickoff prompt from `rebuild/README.md`. The pack is
+written so the build can proceed one story at a time from
+`rebuild/30_BUILD_PLAN.md`, with the 58 tests of the reference build
+described in each spec's test mapping. Everything in the pack is MIT
+licensed like the packs.
 
 ## Contributing
 

@@ -1,0 +1,6 @@
+01_empty.png  —  The paste page before any check: textarea, profile selector, Check button, How it works link. Viewport 1440x1000.
+02_checked_slop.png  —  After checking seed/sample-draft.md with the default profile: annotated draft on the left with highlighted spans, evidence report on the right.
+03_checked_human.png  —  After checking seed/human_essay.txt with the default profile: few or no highlights, band none.
+04_how_it_works.png  —  The How it works modal open on the empty page: the system description and the instrument list.
+05_checked_mobile.png  —  The checked slop state at a 390x844 phone viewport: single column.
+page errors: not measured; the reference screenshot script does not capture console errors
