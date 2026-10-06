@@ -16,6 +16,11 @@ its scoring and decay rules, fusion, the report, the CLI, and the web UI,
 with the test suite spelled out as requirements. See the kickoff prompt at
 the end of `rebuild/README.md`.
 
+![The TELL web UI. On the left, a 290-word productivity blog post with dozens of highlighted spans. On the right, an evidence report headed Substantial tell density in the flagged spans, total LLR +9.43, with a list of signal contributions.](images/tell-ui-report.png)
+
+*The paste UI on a deliberately awful sample. Every highlight is a span some
+instrument flagged, and the right column is the arithmetic.*
+
 The packs alone are not the whole detector. They are the S4 lexical layer.
 The statistical layer (perplexity, Binoculars, burstiness) and the
 stylometric layer (sentence shape, paragraph uniformity, punctuation,
@@ -51,6 +56,21 @@ of co-occurrence across independent rules, and TELL enforces it two ways:
 
 If you port these rules into your own tool and skip that step, you will
 build a thing that accuses people who like dashes.
+
+![TELL's terminal evidence report for a 115,623-word document in the technical profile. Assessment: mild stylistic overlap with machine-generated text, total LLR +2.90, posterior 0.60. The contributions table lists the Claude-isms pack at +3.00, the GPT register pack at +0.15, punctuation at +0.15, burstiness at +0.05, and the rest at zero.](images/tell-long-report.png)
+
+*The terminal report on a 115,000-word document, technical profile. The
+Claude-isms pack fired at +3.00 and the total still stopped one hundredth
+of a point under elevated. That is the single-fire ceiling doing its job.*
+
+## The unit
+
+Every rule's `weight` is a multiplier on a log-likelihood ratio in
+natural-log units. Zero means the observation is equally likely under
+either hypothesis. Plus one is about 2.7 to 1 toward machine, plus three
+is 20 to 1, plus six is 400 to 1. Honest signals in this unit can be added.
+
+![A section of the how-it-works page explaining the log-likelihood ratio. A small table maps LLR values to odds shifts: minus 1 is 2.7 to 1 toward human, 0 is nothing, plus 1 is 2.7 to 1 toward machine, plus 3 is 20 to 1, plus 6 is 400 to 1.](images/tell-llr-scale.png)
 
 ## Rule format
 
